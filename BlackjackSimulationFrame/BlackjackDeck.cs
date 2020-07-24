@@ -8,7 +8,7 @@ namespace BlackjackSimulationFrame
         private List<char> _dealDeck;
         private List<char> _discardDeck;
 
-        private static readonly char[] CardPerSuit = new []{'A', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K'};
+        private static readonly char[] CardPerSuit = new []{'A', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K'};
         
         public int NumberOfDecks { get; }
         public int DeckCut { get; } // Remaining cards to re-shuffle deck at.
@@ -34,8 +34,11 @@ namespace BlackjackSimulationFrame
             Shuffle();
         }
 
-        protected void Shuffle()
+        private void Shuffle()
         {
+            _dealDeck.AddRange(_discardDeck);
+            _discardDeck.Clear();
+            
             for (var i = _dealDeck.Count - 1; i >= 0; i--)
             {
                 var swapIndex = RandomGen.Next((i));
@@ -46,7 +49,13 @@ namespace BlackjackSimulationFrame
             }
         }
 
-        protected char DealCard()
+        protected internal void ShuffleIfNecessary()
+        {
+            if (_dealDeck.Count <= DeckCut)
+                Shuffle();
+        }
+
+        protected internal char DealCard()
         {
             var returnValue = _dealDeck.First();
 
